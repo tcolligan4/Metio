@@ -46,7 +46,8 @@ class Thredds(object):
     """
 
     def __init__(self, start=None, end=None, date=None,
-                 bounds=None, target_profile=None, lat=None, lon=None
+                 bounds=None, target_profile=None, lat=None, lon=None,
+                 clip_feature=None
                  ):
         self.start = start
         self.end = end
@@ -369,6 +370,7 @@ class GridMet(Thredds):
         for key, val in kwargs.items():
             setattr(self, key, val)
 
+        self.bbox = self.bounds
         self.service = 'thredds.northwestknowledge.net:8080'
         self.scheme = 'http'
 
