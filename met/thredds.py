@@ -46,7 +46,7 @@ class Thredds(object):
     """
 
     def __init__(self, start=None, end=None, date=None,
-                 bounds=None, target_profile=None, lat=None, lon=None,
+                 bbox=None, clip_feature=None, target_profile=None, lat=None, lon=None,
                  ):
         self.start = start
         self.end = end
@@ -55,7 +55,8 @@ class Thredds(object):
         self.src_bounds_wsen = None
 
         self.target_profile = target_profile
-        self.bbox = bounds
+        self.bbox = bbox
+        self.clip_feature = clip_feature # a polygon object to mask raster.
         self.lat = lat
         self.lon = lon
 
@@ -217,12 +218,6 @@ class Thredds(object):
             dst.write(arr)
         return None
     
-   #@property
-   #def clip_feature(self):
-   #    pass
-
-
-
 
 class TopoWX(Thredds):
     """ Twix
@@ -375,7 +370,6 @@ class GridMet(Thredds):
         for key, val in kwargs.items():
             setattr(self, key, val)
 
-        print(self.bbox)
         self.service = 'thredds.northwestknowledge.net:8080'
         self.scheme = 'http'
 
