@@ -126,6 +126,7 @@ class Thredds(object):
                             'width': dst_width,
                             'height': dst_height})
 
+        reproj_path = 'tiled.tif'
         with rasopen(reproj_path, 'w', **dst_profile) as dst:
             print("Saved", reproj_path)
             dst_array = empty((1, dst_height, dst_width), dtype=float32)
@@ -137,7 +138,7 @@ class Thredds(object):
             out = dst_array.reshape(1, dst_array.shape[1], dst_array.shape[2])
             plt.imshow(out[0, :, :])
             plt.show()
-            dst.write(dst_array.reshape(1, dst_array.shape[1], dst_array.shape[2]))
+            dst.write(out)
 
     def _mask(self):
 
