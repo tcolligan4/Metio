@@ -126,6 +126,7 @@ class Thredds(object):
                             'height': dst_height})
 
         with rasopen(reproj_path, 'w', **dst_profile) as dst:
+            print("Saved", reproj_path)
             dst_array = empty((1, dst_height, dst_width), dtype=float32)
 
             reproject(src_array, dst_array, src_transform=src_profile['transform'],
