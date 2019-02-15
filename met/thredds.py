@@ -33,7 +33,6 @@ from rasterio.warp import calculate_default_transform as cdt
 from xlrd.xldate import xldate_from_date_tuple
 from xarray import open_dataset
 from pandas import date_range, DataFrame
-import matplotlib.pyplot as plt
 
 from bounds import GeoBounds
 
@@ -108,7 +107,6 @@ class Thredds(object):
         setattr(self, 'reprojection', reproj_path)
 
         with rasopen(self.projection, 'r') as src:
-            print('reproj', src.profile)
             src_profile = src.profile
             src_bounds = src.bounds
             src_array = src.read(1)
@@ -127,27 +125,21 @@ class Thredds(object):
                             'width': dst_width,
                             'height': dst_height})
 
-        reproj_path = 'tiled.tif'
         with rasopen(reproj_path, 'w', **dst_profile) as dst:
-            print("Saved", reproj_path)
             dst_array = empty((1, dst_height, dst_width), dtype=float32)
 
             reproject(src_array, dst_array, src_transform=src_profile['transform'],
                       src_crs=src_profile['crs'], dst_crs=self.target_profile['crs'],
                       dst_transform=dst_affine, resampling=Resampling.nearest,
                       num_threads=2)
-            out = dst_array.reshape(1, dst_array.shape[1], dst_array.shape[2])
-            plt.imshow(out[0, :, :])
-            plt.show()
-            dst.write(out)
+
+            dst.write(dst_array.reshape(1, dst_array.shape[1], dst_array.shape[2]))
 
     def _mask(self):
 
         mask_path = os.path.join(self.temp_dir, 'masked.tif')
 
         with rasopen(self.reprojection) as src:
-            print(src.meta)
-            print(self.clip_feature)
             out_arr, out_trans = mask(src, self.clip_feature, crop=True,
                                       all_touched=True)
             out_meta = src.meta.copy()
@@ -381,7 +373,7 @@ class GridMet(Thredds):
         self.service = 'thredds.northwestknowledge.net:8080'
         self.scheme = 'http'
 
-        self.temp_dir = 'tmp/' 
+        self.temp_dir = mkdtemp()
 
         self.variable = variable
         self.available = ['elev', 'pr', 'rmax', 'rmin', 'sph', 'srad',
