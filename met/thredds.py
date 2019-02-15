@@ -375,6 +375,7 @@ class GridMet(Thredds):
         for key, val in kwargs.items():
             setattr(self, key, val)
 
+        print(self.bbox)
         self.service = 'thredds.northwestknowledge.net:8080'
         self.scheme = 'http'
 
