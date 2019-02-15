@@ -217,9 +217,9 @@ class Thredds(object):
             dst.write(arr)
         return None
     
-   @property
-   def clip_feature(self):
-       pass
+   #@property
+   #def clip_feature(self):
+   #    pass
 
 
 
