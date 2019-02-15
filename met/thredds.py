@@ -33,6 +33,7 @@ from rasterio.warp import calculate_default_transform as cdt
 from xlrd.xldate import xldate_from_date_tuple
 from xarray import open_dataset
 from pandas import date_range, DataFrame
+import matplotlib.pyplot as plt
 
 from bounds import GeoBounds
 
@@ -133,7 +134,9 @@ class Thredds(object):
                       src_crs=src_profile['crs'], dst_crs=self.target_profile['crs'],
                       dst_transform=dst_affine, resampling=Resampling.nearest,
                       num_threads=2)
-
+            out = dst_array.reshape(1, dst_array.shape[1], dst_array.shape[2])
+            plt.imshow(out[0, :, :])
+            plt.show()
             dst.write(dst_array.reshape(1, dst_array.shape[1], dst_array.shape[2]))
 
     def _mask(self):
