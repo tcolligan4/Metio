@@ -47,7 +47,6 @@ class Thredds(object):
 
     def __init__(self, start=None, end=None, date=None,
                  bounds=None, target_profile=None, lat=None, lon=None,
-                 clip_feature=None
                  ):
         self.start = start
         self.end = end
@@ -217,6 +216,12 @@ class Thredds(object):
         with rasopen(output_filename, 'w', **geometry) as dst:
             dst.write(arr)
         return None
+    
+   @property
+   def clip_feature(self):
+       pass
+
+
 
 
 class TopoWX(Thredds):
@@ -370,7 +375,6 @@ class GridMet(Thredds):
         for key, val in kwargs.items():
             setattr(self, key, val)
 
-        self.bbox = self.bounds
         self.service = 'thredds.northwestknowledge.net:8080'
         self.scheme = 'http'
 
