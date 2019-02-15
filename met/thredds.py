@@ -373,7 +373,7 @@ class GridMet(Thredds):
         self.service = 'thredds.northwestknowledge.net:8080'
         self.scheme = 'http'
 
-        self.temp_dir = os.mkdir("tmp/")
+        self.temp_dir = 'tmp/' 
 
         self.variable = variable
         self.available = ['elev', 'pr', 'rmax', 'rmin', 'sph', 'srad',
