@@ -108,6 +108,7 @@ class Thredds(object):
         setattr(self, 'reprojection', reproj_path)
 
         with rasopen(self.projection, 'r') as src:
+            print('reproj', src.profile)
             src_profile = src.profile
             src_bounds = src.bounds
             src_array = src.read(1)
