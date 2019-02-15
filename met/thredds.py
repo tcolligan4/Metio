@@ -145,6 +145,8 @@ class Thredds(object):
         mask_path = os.path.join(self.temp_dir, 'masked.tif')
 
         with rasopen(self.reprojection) as src:
+            print(src.meta)
+            print(self.clip_feature)
             out_arr, out_trans = mask(src, self.clip_feature, crop=True,
                                       all_touched=True)
             out_meta = src.meta.copy()
