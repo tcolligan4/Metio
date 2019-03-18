@@ -489,7 +489,6 @@ class GridMet(Thredds):
             arr = subset[self.kwords[self.variable]].values
             arr = arr.reshape(arr.shape[1], arr.shape[2]).transpose()
             arr = arr.reshape(1, arr.shape[0], arr.shape[1])
-            rmtree(self.temp_dir)
             return arr
 
         else:
