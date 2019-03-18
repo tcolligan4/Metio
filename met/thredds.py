@@ -76,7 +76,7 @@ class Thredds(object):
         proj_path = os.path.join(self.temp_dir, 'tiled_proj.tif')
         setattr(self, 'projection', proj_path)
 
-        profile = copy.deepcopy(self.target_profile)
+        profile = self.target_profile.copy()
         profile['dtype'] = float32
         bb = self.bbox.as_tuple()
 
@@ -111,7 +111,7 @@ class Thredds(object):
             src_bounds = src.bounds
             src_array = src.read(1)
 
-        dst_profile = copy.deepcopy(self.target_profile)
+        dst_profile = self.target_profile.copy()
         dst_profile['dtype'] = float32
         bounds = src_bounds
         dst_affine, dst_width, dst_height = cdt(src_profile['crs'],
