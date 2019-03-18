@@ -457,6 +457,52 @@ class GridMet(Thredds):
             conformed_array = self.conform(arr, out_file=out_filename)
             return conformed_array
 
+
+    def get_data_subset_nonconform(self, out_filename=None):
+
+        url = self._build_url()
+        xray = open_dataset(url)
+
+        north_ind = argmin(abs(xray.lat.values - (self.bbox.north + 1.)))
+        south_ind = argmin(abs(xray.lat.values - (self.bbox.south - 1.)))
+        west_ind = argmin(abs(xray.lon.values - (self.bbox.west - 1.)))
+        east_ind = argmin(abs(xray.lon.values - (self.bbox.east + 1.)))
+
+        north_val = xray.lat.values[north_ind]
+        south_val = xray.lat.values[south_ind]
+        west_val = xray.lon.values[west_ind]
+        east_val = xray.lon.values[east_ind]
+
+        setattr(self, 'src_bounds_wsen', (west_val, south_val,
+                                          east_val, north_val))
+
+        if self.variable != 'elev':
+            xray.rename({'day': 'time'}, inplace=True)
+            subset = xray.loc[dict(time=slice(self.start, self.end),
+                                   lat=slice(south_val, north_val),
+                                   lon=slice(west_val, east_val))]
+
+            date_ind = self._date_index()
+            subset['time'] = date_ind
+            setattr(self, 'width', subset.dims['lon'])
+            setattr(self, 'height', subset.dims['lat'])
+            arr = subset[self.kwords[self.variable]].values
+            arr = arr.reshape(arr.shape[1], arr.shape[2]).transpose()
+            arr = arr.reshape(1, arr.shape[0], arr.shape[1])
+            rmtree(self.temp_dir)
+            return arr
+
+        else:
+            subset = xray.loc[dict(lat=slice((self.bbox.north + 1),
+                                             (self.bbox.south - 1)),
+                                   lon=slice((self.bbox.west - 1),
+                                             (self.bbox.east + 1)))]
+            setattr(self, 'width', subset.dims['lon'])
+            setattr(self, 'height', subset.dims['lat'])
+            arr = subset.elevation.values
+            return arr
+
+
     def get_point_timeseries(self):
 
         url = self._build_url()
