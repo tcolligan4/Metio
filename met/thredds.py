@@ -33,7 +33,9 @@ from rasterio.warp import calculate_default_transform as cdt
 from xlrd.xldate import xldate_from_date_tuple
 from xarray import open_dataset
 from pandas import date_range, DataFrame
+import warnings
 
+warnings.simplefilter(action='ignore', category=FutureWarning)
 from bounds import GeoBounds
 
 with hooks():
@@ -508,7 +510,7 @@ class GridMet(Thredds):
         xray = open_dataset(url)
         subset = xray.sel(lon=self.lon, lat=self.lat, method='nearest')
         subset = subset.loc[dict(day=slice(self.start, self.end))]
-        subset.rename({'day': 'time'}, inplace=True)
+        subset.rename({'day': 'time'}, inplace=True)  # FUTUREWARNING, going to loose inplace
         date_ind = self._date_index()
         subset['time'] = date_ind
         time = subset['time'].values
