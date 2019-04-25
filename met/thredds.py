@@ -460,6 +460,10 @@ class GridMet(Thredds):
             return conformed_array
 
 
+    def remove_temp_dir(self):
+        rmtree(self.temp_dir)
+
+
     def get_data_subset_nonconform(self, out_filename=None):
 
         url = self._build_url()
